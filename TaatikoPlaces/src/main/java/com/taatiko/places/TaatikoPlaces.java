@@ -5,10 +5,16 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TaatikoPlaces implements AsyncTaskCompleteListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class TaatikoPlaces {
     private final String NAME = "";
     private final String ADDRESS_NAME = "";
     private final String VICINITY_NAME = "";
@@ -20,6 +26,7 @@ public class TaatikoPlaces implements AsyncTaskCompleteListener {
     public static final String PREF_NAME = "taatiko places";
     private static SharedPreferences app_preferences;
     private static TaatikoPlaces preferenceHelper = new TaatikoPlaces();
+    ApiInterfaces apiInterface = ApiClients.getClient().create(ApiInterfaces.class);
 
     private TaatikoPlaces() {
 
@@ -38,7 +45,7 @@ public class TaatikoPlaces implements AsyncTaskCompleteListener {
         editor.commit();
     }
 
-    public String get_key() {
+    private String get_key() {
         return app_preferences.getString(MAP_KEY, "");
     }
 
@@ -102,29 +109,27 @@ public class TaatikoPlaces implements AsyncTaskCompleteListener {
         return app_preferences.getFloat(String.valueOf(LNG), 0);
     }
 
-    public void getPrediction(Context context, AsyncTaskCompleteListener asyncTaskCompleteListener, String search) {
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("query", search);
-            new HttpRequester(context, "https://mp.feres.co/query", jsonObject, 1,
-                    asyncTaskCompleteListener, HttpRequester.POST);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+    public static void getPrediction(Context context, String search) {
+        ApiInterfaces apiInterface = ApiClients.getClient().create(ApiInterfaces.class);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("query", search);
+        Call<JsonObjectModalResponse> call = apiInterface.get_query(ApiClients.makeJSONRequestBody(jsonObject));
+        call.enqueue(new Callback<JsonObjectModalResponse>() {
+            public void onResponse(Call<JsonObjectModalResponse> call, Response<JsonObjectModalResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().isSuccess()) {
+                        Log.d("taatikoPlaces", response.body().getRecord().toString());
+                    } else {
+                        Log.d("taatikoPlaces", "No data to view");
+                    }
 
-    @Override
-    public void onTaskCompleted(String response, int serviceCode) {
-        if (TextUtils.isEmpty(response)) {
-            return;
-        }
-        switch (serviceCode) {
-            case 1:
-                Log.d("taatikoPlaces", response);
-                break;
-            default:
-                // do with default
-                break;
-        }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObjectModalResponse> call, Throwable t) {
+                Log.d("taatikoPlaces", t.getMessage());
+            }
+        });
     }
 }
