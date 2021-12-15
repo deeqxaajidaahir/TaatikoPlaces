@@ -17,3 +17,9 @@ dependencies {<br>
     <br>
 }
 </p>
+
+<style>
+    span{
+padding-left: 30px;
+    }
+</style>
