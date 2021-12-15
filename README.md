@@ -2,18 +2,16 @@
 <b>Step 1. Add it in your root build.gradle at the end of repositories:</b>
 <br>
 <p>
-    allprojects {
-        repositories {
-            ...
-            maven { url 'https://www.jitpack.io' }
-        }
-    }
+    allprojects {<br>
+        repositories {<br>
+            ...<br>
+            maven { url 'https://www.jitpack.io' }<br>
+        }<br>
+    }<br>
 </p>
-<br>
 <p>
-<br>
 <b>Step 2. Add the dependency:</b><br>
-dependencies {
-    implementation 'com.github.deeqxaajidaahir:TaatikoPlaces:Tag'
+dependencies {<br>
+    implementation 'com.github.deeqxaajidaahir:TaatikoPlaces:Tag'<br>
 }
 </p>
