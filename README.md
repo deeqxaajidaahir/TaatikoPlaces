@@ -3,15 +3,17 @@
 <br>
 <p>
     allprojects {<br>
-        repositories {<br>
-            ...<br>
-            maven { url 'https://www.jitpack.io' }<br>
-        }<br>
+       <span style="padding-left: 30px;"> repositories {<br></span>
+           <span style="padding-left: 60px;"> ...<br></span>
+           <span style="padding-left: 60px;"> maven { url 'https://www.jitpack.io' }<br></span>
+        }<br></span>
     }<br>
 </p>
 <p>
 <b>Step 2. Add the dependency:</b><br>
 dependencies {<br>
-    implementation 'com.github.deeqxaajidaahir:TaatikoPlaces:Tag'<br>
+<span style="padding-left: 30px;">
+    implementation 'com.github.deeqxaajidaahir:TaatikoPlaces:Tag'</span>
+    <br>
 }
 </p>
